@@ -24,6 +24,9 @@ urlpatterns = [
     path('register/', views.user_register, name="register"),
     path('login/', views.user_login, name="login"),
     path('logout/', views.userlogout, name='logout'),
+    path('create_profile/', views.create_profile, name='create_profile'),
+    path('profile_page/', views.profile_page, name='profile_page'),
+    path('create_post/<int:Profile_id>/', views.create_post, name='create_post'),
 ]
 
 if settings.DEBUG:

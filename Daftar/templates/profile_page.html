@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+
+
+{% block tilte %}
+ Profile Page
+{% endblock %}
+
+{% block content %}
+
+	{{profile.owner}}
+	<br>
+	{{profile.bio}}
+	<br>
+	{{profile.established}}
+
+	<br>
+	
+	{% for post in posts %}
+		{{post.title}}
+		<br>
+		{{post.context}}
+	{% endfor %}
+
+	<br>
+	<div class="mx-auto" style="width: 200px;">
+		<a href="{% url 'create_post' Profile_id=profile.id %}"><button type="button" class="btn btn-primary">Add New Post</button></a>
+	</div>
+
+{% endblock content %}

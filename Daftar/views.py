@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import UserRegisterForm, LoginForm, ProfileForm, PostForm
+from .models import Profile
+from .models import Post
 # Create your views here.
 
 
@@ -33,7 +35,7 @@ def user_login(request):
 			auth_user = authenticate(username=my_username, password=my_password)
 			if auth_user is not None:
 				login(request, auth_user)
-				return redirect("user_profile")
+				return redirect("profile_page")
 	context = {
 		"form": form
 	}
@@ -42,4 +44,63 @@ def user_login(request):
 def userlogout(request):
     logout(request)
     return redirect("login")
+
+def profile_page(request):
+	if request.user.is_anonymous:
+		return redirect("login")
+	profile_obj = Profile.objects.get(owner=request.user)
+	posts = post_list(request,profile_obj.id)
+	context = {
+		"profile": profile_obj,
+		"posts": posts,
+	}
+	return render(request, 'profile_page.html', context)
+
+def post_list(request,Profile_id):
+	profile_obj = Profile.objects.get(id=Profile_id)
+	post_obj2 =  profile_obj.post_set.all()
+	return post_obj2
+
+def create_profile(request):
+
+	if request.user.is_anonymous:
+		return redirect("login")
+
+	form = ProfileForm()
+
+	
+	if request.method == "POST":
+		form = ProfileForm(request.POST, request.FILES or None)
+		if form.is_valid():
+			profile_obj = form.save(commit=False)
+			profile_obj.owner = request.user
+			profile_obj.save()
+			return redirect("profile_page")
+	context = {
+		"form": form,
+
+		}
+	return render(request, 'create_profile.html', context)
+
+
+def create_post(request, Profile_id):
+	form = PostForm()
+	profile_obj = Profile.objects.get(id=Profile_id)
+	if request.method == "POST":
+		form = PostForm(request.POST)
+		if form.is_valid():
+			post_obj = form.save(commit=False)
+			post_obj.profile = profile_obj
+			post_obj.user = request.user
+			post_obj.save()
+			return redirect("profile_page")
+	
+	context = {
+		"form": form,
+		"profile": profile_obj,
+	}
+	return render(request, "create_post.html", context)
+
+
+
 

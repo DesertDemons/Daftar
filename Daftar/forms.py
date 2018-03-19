@@ -20,10 +20,10 @@ class LoginForm(forms.Form):
 class ProfileForm(forms.ModelForm):
 	class Meta:
 		model = Profile
-		fields = '__all__'
+		fields = ['bio']
 
 class PostForm(forms.ModelForm):
 	class Meta:
 		model = Post
-		fields = '__all__'
+		fields = ['title', 'context']
 
