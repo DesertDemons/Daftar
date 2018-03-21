@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import UserRegisterForm, LoginForm, ProfileForm, PostForm
 from .models import Profile
 from .models import Post
+from .models import Follow
+from django.http import JsonResponse, HttpResponse
 # Create your views here.
 
 
@@ -50,6 +52,9 @@ def profile_page(request):
 		return redirect("login")
 	profile_obj = Profile.objects.get(owner=request.user)
 	posts = post_list(request,profile_obj.id)
+
+	
+
 	context = {
 		"profile": profile_obj,
 		"posts": posts,
@@ -100,6 +105,49 @@ def create_post(request, Profile_id):
 		"profile": profile_obj,
 	}
 	return render(request, "create_post.html", context)
+
+
+def search_user(request):
+	profiles = Profile.objects.all()
+	query = request.GET.get('q')
+	if query:
+		profiles = profiles.filter(owner__username__icontains=query)
+
+
+	follow_list = []
+	followed = request.user.follow_set.all()
+	for follow in followed:
+		follow_list.append(follow.profile)
+
+	context = {
+		"profiles": profiles,
+		"follow_list": follow_list,
+	}
+	return render(request, "search_user.html", context)
+
+def follow_user(request, Profile_id):
+	profile_obj = Profile.objects.get(id=Profile_id)
+	follow_obj, created = Follow.objects.get_or_create(user=request.user, profile=profile_obj)
+
+	if created:
+		action="Following"
+	else:
+		action="Unfollow"
+		follow_obj.delete()
+
+	follow_count = profile_obj.follow_set.all().count()
+
+
+	context = {
+		"action": action,
+		"following_count": follow_count,
+	}
+	return JsonResponse(context, safe=False)
+
+
+
+
+
 
 
 

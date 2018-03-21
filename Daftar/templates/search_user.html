@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+
+
+{% block tilte %}
+ Search user
+{% endblock %}
+
+{% block content %}
+
+	<nav class="navbar navbar-light bg-light">
+	  <form class="form-inline" action="{% url 'search_user' %}" method="GET">
+	    <div class="input-group">
+	      <div class="input-group-prepend">
+	        <span class="input-group-text" id="basic-addon1">@</span>
+	      </div>
+	      <input class="form-control mr-sm-2" type="search" placeholder="Username..." aria-label="Username" aria-describedby="basic-addon1" name="q"> 
+	      <input class="btn btn-primary" type="submit" value="Search">
+	    </div>
+	    <a class="nav-link text-white btn btn-primary ml-3">User Name : {{user.username}}</a>
+	  </form>
+	</nav>
+
+	<div class="col-md-3 col-xl-3 mt-3">
+		{% for profile in profiles %}
+			{% ifnotequal profile.owner request.user %}
+			<div class="card mt-3 border border-primary" style="width: 18rem;">
+			  <div class="card-body">
+			    <h5 class="card-title">User Name : {{profile.owner.username}}</h5>
+			    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+			    <p class="card-text">{{profile.bio}}</p>
+			    <button class="btn btn-light" onclick="Follow({{profile.id}})">
+					<i id="fav-color-{{profile.id}}" class="fas fa-user {% if profile in follow_list %} text-primary {% endif %}"></i>
+				</button><br>
+			  </div>
+			</div>
+			{% endifnotequal %}
+		{% endfor %}
+
+	</div>
+		
+
+<script>
+	function Follow(id){
+		$.ajax({
+			type:"GET",
+			url: "/follow/"+id+"/",
+			error:function(){
+				console.log("Error something went wrong!")
+			},
+			success:function(data){
+				console.log(data);
+				if(data.action==="Following"){
+					console.log('test1');
+					$("#fav-color-"+id).addClass("text-primary")
+				}
+				else{
+					console.log('test2');
+					$("#fav-color-"+id).removeClass("text-primary")
+				}
+				
+			}
+		})
+	}
+</script>
+
+{% endblock content %}
+
+
+
+
+
+

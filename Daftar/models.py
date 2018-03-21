@@ -19,5 +19,7 @@ class Post(models.Model):
 
 
 class Follow(models.Model):
-	following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="who_follows")
-	follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="who_followed")
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+	# following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="who_follows")
+	# follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="who_followed")
