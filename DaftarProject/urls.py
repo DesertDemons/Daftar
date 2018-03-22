@@ -29,6 +29,9 @@ urlpatterns = [
     path('create_post/<int:Profile_id>/', views.create_post, name='create_post'),
     path('search_user/', views.search_user, name='search_user'),
     path('follow/<int:Profile_id>/', views.follow_user, name="follow-button"),
+    path('followers_page/<int:Profile_id>/', views.followers_page, name='followers_page'),
+    path('following_page/<int:Profile_id>/', views.following_page, name='following_page'),
+    path('user_profile/<int:Profile_id>/', views.user_profile, name='user_profile'),
 ]
 
 if settings.DEBUG:

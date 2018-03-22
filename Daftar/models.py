@@ -17,9 +17,14 @@ class Post(models.Model):
 	context = models.TextField()
 	established = models.DateField(auto_now_add=True)
 
+	def __str__(self):
+		return self.username
+
 
 class Follow(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 	# following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="who_follows")
 	# follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="who_followed")
+	def __str__(self):
+		return self.profile.owner.username

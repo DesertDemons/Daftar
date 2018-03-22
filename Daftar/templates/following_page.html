@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+
+
+{% block tilte %}
+ Profile Page
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-primary text-white border border-secondary">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+		 <span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+		<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+		   <li class="nav-item active">
+		     <a class="nav-link text-white mr-3" href="{% url 'profile_page' %}"> <h3><strong>Daftar Project</strong></h3> <span class="sr-only">(current)</span></a>
+		   </li>
+		   {% if user.is_authenticated %}
+		   <li class="nav-item">
+		       <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'profile_page' %}">Profile Page</a>
+		   </li>
+		   <li class="nav-item">
+		     <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'search_user' %}">Search for users</a>
+		   </li>
+		   <li class="nav-item">
+		     <a class="nav-link text-white btn btn-outline-light ml-3" href="...">Feed Page</a>
+		   </li>
+		   <li class="nav-item">
+		     <a class="nav-link text-white btn btn-primary ml-3">My UserName : {{user.username}}</a>
+		    </li>
+		   {% endif %}
+		</ul>
+	</div>
+</nav>
+
+      
+     <div class="col-md-3 col-xl-3 mt-3">
+		{% for follower_page in following_pages %}
+			
+			<!-- {% ifnotequal follower_page.owner request.user %} -->
+			<div class="card mt-3 border border-primary" style="width: 18rem;">
+			  <div class="card-body">
+			    <h5 class="card-title">User Name : {{follower_page.owner}}</h5>
+			    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+			    <p class="card-text">Bio :{{follower_page.bio}}</p>
+			    <button class="btn btn-light" onclick="Follow({{follower_page.id}})">
+			    	<span id="follow-count-{{follower_page.id}}">{{follower_page.follow_set.count}} </span><span> Followers</span>    
+					<i id="follow-color-{{follower_page.id}}" class="fas fa-user {% if follower_page in follow_list %} text-primary {% endif %}"></i>
+				</button><br>
+			  </div>
+			</div>
+			<!-- {% endifnotequal %} -->
+		{% endfor %}
+
+	</div>
+
+
+<script>
+	function Follow(id){
+		$.ajax({
+			type:"GET",
+			url: "/follow/"+id+"/",
+			error:function(){
+				console.log("Error something went wrong!")
+			},
+			success:function(data){
+				console.log(data);
+				$("#follow-count-"+id).text(data.count);
+				if(data.action==="Following"){
+					$("#follow-color-"+id).addClass("text-primary")
+				}
+				else{
+					$("#follow-color-"+id).removeClass("text-primary")
+				}
+				
+			}
+		})
+	}
+</script>
+{% endblock content %}

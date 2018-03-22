@@ -114,14 +114,11 @@ def search_user(request):
 		profiles = profiles.filter(owner__username__icontains=query)
 
 
-	follow_list = []
-	followed = request.user.follow_set.all()
-	for follow in followed:
-		follow_list.append(follow.profile)
+	# follow_list = followed_list(request)
 
 	context = {
 		"profiles": profiles,
-		"follow_list": follow_list,
+		# "follow_list": follow_list,
 	}
 	return render(request, "search_user.html", context)
 
@@ -136,13 +133,78 @@ def follow_user(request, Profile_id):
 		follow_obj.delete()
 
 	follow_count = profile_obj.follow_set.all().count()
+	following_count = request.user.follow_set.all().count()
 
 
 	context = {
 		"action": action,
-		"following_count": follow_count,
+		"count": follow_count,
+		"count_following": following_count,
 	}
 	return JsonResponse(context, safe=False)
+
+
+# def followed_list(request):
+# 	follow_list = []
+# 	profile = Profile.objects.get(owner=request.user)
+# 	followed = profile.follow_set.all()
+# 	for follow in followed:
+# 		follow_list.append(follow.user)
+
+# 	return follow_list
+
+
+# def followers_page(request):
+# 	followed = followed_list(request)
+# 	context = {
+# 		"followers_page": followed,
+# 	}
+# 	return render(request, "followers_page.html", context)
+
+def followed_list(request, Profile_id):
+	follow_list = []
+	profile = Profile.objects.get(id=Profile_id)
+	followed = profile.follow_set.all()
+	for follow in followed:
+		follow_list.append(follow.user)
+
+	return follow_list
+
+
+def followers_page(request, Profile_id):
+	followed = followed_list(request, Profile_id)
+	context = {
+		"followers_page": followed,
+	}
+	return render(request, "followers_page.html", context)
+
+def following_list(request, Profile_id):
+	following_list = []
+	profile = Profile.objects.get(id=Profile_id)
+	following = request.user.follow_set.all()
+	for follow in following:
+		following_list.append(follow.profile)
+
+	return following_list
+
+def following_page(request, Profile_id):
+	following = following_list(request, Profile_id)
+	context = {
+		"following_pages": following,
+	}
+	return render(request, "following_page.html", context)
+
+
+def user_profile(request, Profile_id):
+	user_profile = Profile.objects.get(id=Profile_id)
+	posts = post_list(request, user_profile.id)
+	follow_list = followed_list(request, Profile_id)
+	context = {
+		"user_profile": user_profile,
+		"posts": posts,
+		"follow_list": follow_list,
+	}
+	return render(request, "user_profile.html", context)
 
 
 

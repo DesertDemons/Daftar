@@ -27,6 +27,9 @@
 		            <li class="nav-item">
 		              <a class="nav-link text-white btn btn-outline-light ml-3" href="...">Feed Page</a>
 		            </li>
+		            <li class="nav-item">
+		            	<a class="nav-link text-white btn btn-primary ml-3">My UserName : {{user.username}}</a>
+		            </li>
 		            {% endif %}
 		          </ul>
 		        </div>
@@ -41,16 +44,21 @@
 			  <div class="card">
 			    <img class="card-img-top mx-auto" src="https://logopond.com/logos/ccaf061e5bf250bc648aebb7d084f8bd.png" style="max-width: 18rem; alt="Card image cap">
 			    <div class="card-body">
-			      <h5 class="card-title"> <strong> Name :</strong> {{profile.owner}}</h5>
-			      <p class="card-text"> <strong> About :</strong> {{profile.bio}}</p>
+			      <h5 class="card-title"> <strong> Name :</strong> {{user_profile.owner}}</h5>
+			      <p class="card-text"> <strong> About :</strong> {{user_profile.bio}}</p>
 			      
-			      	<a href="{% url 'followers_page' Profile_id=profile.id %}"> <span id="follow-count-{{profile.id}}">{{profile.follow_set.count}} </span><span> Followers</span> </a>
+			      	<dev class="btn btn-outline-light border border-primary mr-3"> <a href="{% url 'followers_page' Profile_id=user_profile.id %}"> <span id="follow-count-{{user_profile.id}}">{{user_profile.follow_set.count}} </span><span> Followers</span> </a> </dev>
 					
-					<a href="{% url 'following_page' Profile_id=profile.id %}"><span id="following-count-{{profile.id}}">{{request.user.follow_set.count}}</span> <span> Following</span> </a> 
+					<dev class="btn btn-outline-light border border-primary mr-3"><a href="{% url 'following_page' Profile_id=user_profile.id %}"><span id="following-count-{{user_profile.id}}">{{request.user.follow_set.count}}</span> <span> Following</span> </a> </dev>
+				</button>
+				
+				<button class="btn btn-light" style="float: right;" onclick="Follow({{user_profile.id}})">
+			    	<!-- <span id="follow-count-{{user_profile.id}}">{{user_profile.follow_set.count}} </span>--> <span> Follow Buttuon</span>     
+					<i id="follow-color-{{user_profile.id}}" class="fas fa-user {% if user_profile in follow_list %} text-primary {% endif %}"></i>
 				</button><br>
 			    </div>
 			    <div class="card-footer">
-			      <small class="text-muted">established :{{profile.established}}</small>
+			      <small class="text-muted">established :{{user_profile.established}}</small>
 			    </div>
 			  </div>
 			</div>
@@ -73,10 +81,11 @@
 		</div>
 	</div>
 		<br>
+		{% if request.user == user_profile.owner %}
 		<div class="mx-auto" style="width: 200px;">
-			<a href="{% url 'create_post' Profile_id=profile.id %}"><button type="button" class="btn btn-primary">Add New Post</button></a>
+			<a href="{% url 'create_post' Profile_id=user_profile.id %}"><button type="button" class="btn btn-primary">Add New Post</button></a>
 		</div>
-	
+		{% endif %}
 </div>
 
 
@@ -91,19 +100,17 @@
 			success:function(data){
 				console.log(data);
 				$("#follow-count-"+id).text(data.count);
-				$("#following-count-"+id).text(data.following_count);
-				// if(data.action==="Following"){
-				// 	$("#follow-color-"+id).addClass("text-primary")
-				// }
-				// else{
-				// 	$("#follow-color-"+id).removeClass("text-primary")
-				// }
+				if(data.action==="Following"){
+					$("#follow-color-"+id).addClass("text-primary")
+				}
+				else{
+					$("#follow-color-"+id).removeClass("text-primary")
+				}
 				
 			}
 		})
 	}
 </script>
-
 
 
 
