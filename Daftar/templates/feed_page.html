@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+
+
+{% block tilte %}
+ Profile Page
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-primary text-white border border-secondary">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+		 <span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+		<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+		   <li class="nav-item active">
+		     <a class="nav-link text-white mr-3" href="{% url 'profile_page' %}"> <h3><strong>Daftar Project</strong></h3> <span class="sr-only">(current)</span></a>
+		   </li>
+		   {% if user.is_authenticated %}
+		   <li class="nav-item">
+		       <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'profile_page' %}">Profile Page</a>
+		   </li>
+		   <li class="nav-item">
+		       <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'logout' %}">Logout</a>
+		   </li>
+		   <li class="nav-item">
+		     <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'search_user' %}">Search for users</a>
+		   </li>
+		   
+		   <li class="nav-item">
+		     <a class="nav-link text-white btn btn-primary ml-3">My UserName : {{user.username}}</a>
+		    </li>
+		   {% endif %}
+		</ul>
+	</div>
+</nav>
+
+
+
+<div class="container">
+	<div class="col-md-3 col-xl-3 mt-3">
+	{% for post in posts %}
+		{{post.title}}
+	{% endfor %}
+	{% for profile in profiles %}
+		
+		<div class="card mt-3 border border-primary" style="width: 18rem;">
+				<div class="card-body">
+			  	<h5 class="card-title">User Name : <a href="{% url 'user_profile' Profile_id=profile.id %}"> {{profile.owner.username}}</h5></a>
+			  	{% for post in posts %}
+			  		<h6 class="card-subtitle mb-2 text-muted">{{post.title}}</h6>
+			  	{% endfor %}
+			  	<p class="card-text">{{profile.Post}}</p>
+				</div>
+		</div>
+			
+	{% endfor %}
+	</div>
+</div>
+
+{% endblock content %}

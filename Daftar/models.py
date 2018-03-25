@@ -16,9 +16,7 @@ class Post(models.Model):
 	title = models.CharField(max_length=150)
 	context = models.TextField()
 	established = models.DateField(auto_now_add=True)
-
-	def __str__(self):
-		return self.username
+	
 
 
 class Follow(models.Model):

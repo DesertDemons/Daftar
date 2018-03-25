@@ -32,6 +32,7 @@ urlpatterns = [
     path('followers_page/<int:Profile_id>/', views.followers_page, name='followers_page'),
     path('following_page/<int:Profile_id>/', views.following_page, name='following_page'),
     path('user_profile/<int:Profile_id>/', views.user_profile, name='user_profile'),
+    path('feed_page/<int:Profile_id>/', views.feed_page, name='feed_page'),
 ]
 
 if settings.DEBUG:

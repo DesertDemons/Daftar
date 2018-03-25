@@ -25,7 +25,7 @@
 		              <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'search_user' %}">Search for users</a>
 		            </li>
 		            <li class="nav-item">
-		              <a class="nav-link text-white btn btn-outline-light ml-3" href="...">Feed Page</a>
+		              <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'feed_page' Profile_id=my_profile.id %}">Feed Page</a>
 		            </li>
 		            <li class="nav-item">
 		            	<a class="nav-link text-white btn btn-primary ml-3">My UserName : {{user.username}}</a>
@@ -49,7 +49,7 @@
 			      
 			      	<dev class="btn btn-outline-light border border-primary mr-3"> <a href="{% url 'followers_page' Profile_id=user_profile.id %}"> <span id="follow-count-{{user_profile.id}}">{{user_profile.follow_set.count}} </span><span> Followers</span> </a> </dev>
 					
-					<dev class="btn btn-outline-light border border-primary mr-3"><a href="{% url 'following_page' Profile_id=user_profile.id %}"><span id="following-count-{{user_profile.id}}">{{request.user.follow_set.count}}</span> <span> Following</span> </a> </dev>
+					<dev class="btn btn-outline-light border border-primary mr-3"><a href="{% url 'following_page' Profile_id=user_profile.id %}"><span id="following-count-{{user_profile.id}}">{{user_profile.owner.follow_set.count}}</span> <span> Following</span> </a> </dev>
 				</button>
 				
 				<button class="btn btn-light" style="float: right;" onclick="Follow({{user_profile.id}})">

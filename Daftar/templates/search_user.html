@@ -22,11 +22,9 @@
 		              <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'profile_page' %}">Profile Page</a>
 		            </li>
 		            <li class="nav-item">
-		              <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'search_user' %}">Search for users</a>
-		            </li>
-		            <li class="nav-item">
-		              <a class="nav-link text-white btn btn-outline-light ml-3" href="...">Feed Page</a>
-		            </li>
+		       			<a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'logout' %}">Logout</a>
+		   			</li>
+		            
 		            <li class="nav-item">
 		            	<a class="nav-link text-white btn btn-primary ml-3">My UserName : {{user.username}}</a>
 		            </li>

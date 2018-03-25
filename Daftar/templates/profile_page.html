@@ -22,10 +22,13 @@
 		              <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'profile_page' %}">Profile Page</a>
 		            </li>
 		            <li class="nav-item">
+		      			 <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'logout' %}">Logout</a>
+		   			</li>
+		            <li class="nav-item">
 		              <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'search_user' %}">Search for users</a>
 		            </li>
 		            <li class="nav-item">
-		              <a class="nav-link text-white btn btn-outline-light ml-3" href="...">Feed Page</a>
+		              <a class="nav-link text-white btn btn-outline-light ml-3" href="{% url 'feed_page' Profile_id=profile.id %}">Feed Page</a>
 		            </li>
 		            {% endif %}
 		          </ul>
@@ -46,7 +49,7 @@
 			      
 			      	<a href="{% url 'followers_page' Profile_id=profile.id %}"> <span id="follow-count-{{profile.id}}">{{profile.follow_set.count}} </span><span> Followers</span> </a>
 					
-					<a href="{% url 'following_page' Profile_id=profile.id %}"><span id="following-count-{{profile.id}}">{{request.user.follow_set.count}}</span> <span> Following</span> </a> 
+					<a href="{% url 'following_page' Profile_id=profile.id %}"><span id="following-count-{{profile.id}}">{{profile.owner.follow_set.count}}</span> <span> Following</span> </a> 
 				</button><br>
 			    </div>
 			    <div class="card-footer">

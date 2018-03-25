@@ -5,6 +5,7 @@ from .models import Profile
 from .models import Post
 from .models import Follow
 from django.http import JsonResponse, HttpResponse
+from django.db.models import Q
 # Create your views here.
 
 
@@ -44,8 +45,8 @@ def user_login(request):
 	return render(request, 'login.html', context)
 
 def userlogout(request):
-    logout(request)
-    return redirect("login")
+	logout(request)
+	return redirect("login")
 
 def profile_page(request):
 	if request.user.is_anonymous:
@@ -108,7 +109,7 @@ def create_post(request, Profile_id):
 
 
 def search_user(request):
-	profiles = Profile.objects.all()
+	profiles = Profile.objects.exclude(owner=request.user)
 	query = request.GET.get('q')
 	if query:
 		profiles = profiles.filter(owner__username__icontains=query)
@@ -181,7 +182,7 @@ def followers_page(request, Profile_id):
 def following_list(request, Profile_id):
 	following_list = []
 	profile = Profile.objects.get(id=Profile_id)
-	following = request.user.follow_set.all()
+	following = profile.owner.follow_set.all()
 	for follow in following:
 		following_list.append(follow.profile)
 
@@ -199,17 +200,40 @@ def user_profile(request, Profile_id):
 	user_profile = Profile.objects.get(id=Profile_id)
 	posts = post_list(request, user_profile.id)
 	follow_list = followed_list(request, Profile_id)
+	my_profile = Profile.objects.get(owner=request.user)
 	context = {
 		"user_profile": user_profile,
 		"posts": posts,
 		"follow_list": follow_list,
+		"my_profile": my_profile,
 	}
 	return render(request, "user_profile.html", context)
 
 
+def feed_page(request, Profile_id):
+	following_feed = []
+	print(following_feed)
+	profile_obj = Profile.objects.get(id=Profile_id)
+	print(profile_obj)
+	users = profile_obj.owner.follow_set.all()
+	print(users)
+	
+	
 
 
+	for user in users:
+		following_feed.append(user.profile)
 
+	print(following_feed)
+
+
+	
+
+	context = {
+		"profiles": following_feed,
+		# "posts": posts,
+	}
+	return render(request, "feed_page.html", context)
 
 
 
